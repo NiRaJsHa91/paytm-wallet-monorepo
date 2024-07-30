@@ -24,7 +24,7 @@ jobs:
         context: .
         file: ./docker/Dockerfile.client_app
         push: true
-        tags: nira78/web-app:latest  # Replace with your Docker Hub username and repository
+        tags: nira78/paytm_client_docker:latest  # Replace with your Docker Hub username and repository
 
     - name: Verify Pushed Image
       run: docker pull nira78/paytm_client_docker:latest  # Replace with your Docker Hub username and repository
