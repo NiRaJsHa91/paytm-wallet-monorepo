@@ -30,7 +30,7 @@ jobs:
       run: docker pull nira78/paytm_client_docker:latest  # Replace with your Docker Hub username and repository
 
     - name: Deploy to EC2
-          uses: appleboy/ssh-action@master
+          uses: appleboy/ssh-action@v1.0.3
           with:
             host: ${{ secrets.SSH_HOST }}
             username: ${{ secrets.SSH_USERNAME }}
