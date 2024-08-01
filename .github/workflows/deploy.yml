@@ -39,4 +39,4 @@ jobs:
           sudo docker pull nira78/paytm_client_docker:latest
           sudo docker stop web-app || true
           sudo docker rm web-app || true
-          sudo docker run -d --name web-app -p 3005:3000 nira78/paytm_client_docker:latest
+          sudo docker run -e DB_URL="${{ secrets.DATABASE_URL }}" --restart always -d --name web-app -p 3005:3000 nira78/paytm_client_docker:latest
