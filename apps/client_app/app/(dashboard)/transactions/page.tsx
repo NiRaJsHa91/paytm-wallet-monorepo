@@ -2,9 +2,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
 import db from "@repo/db/client";
 import Transactions from "../../../components/Transactions";
+import { redirect } from "next/navigation";
 
 const getTransactions = async () => {
   const session = await getServerSession(authOptions);
+  if (!session) redirect("/api/auth/signin");
   const txns = await db.onRampTransaction.findMany({
     where: {
       userId: Number(session?.user?.id),
@@ -20,6 +22,8 @@ const getTransactions = async () => {
 
 const getP2PTransactions = async () => {
   const session = await getServerSession(authOptions);
+    if (!session) redirect("/api/auth/signin");
+
   const txns = await db.p2pTransfer.findMany({
     where: {
       toUserId: Number(session?.user?.id),

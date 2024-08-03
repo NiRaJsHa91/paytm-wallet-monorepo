@@ -6,8 +6,6 @@ import { useState } from "react";
 import { TextInput } from "@repo/ui/textinput";
 import { createOnRampTransaction } from "../app/lib/actions/createOnRampTransaction";
 import axios from "axios";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 const SUPPORTED_BANKS = [
   {

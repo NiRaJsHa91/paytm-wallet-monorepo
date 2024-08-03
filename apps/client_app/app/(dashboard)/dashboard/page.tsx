@@ -5,12 +5,14 @@ import db from "@repo/db/client";
 import Link from "next/link";
 import { formatRupee } from "../../utils/formatRupee";
 import Transactions from "../../../components/Transactions";
+import { redirect } from "next/navigation";
 
 const getTransactions = async () => {
   const session = await getServerSession(authOptions);
+  if(!session) redirect("/api/auth/signin");
   const txns = await db.onRampTransaction.findMany({
     where: {
-      userId: Number(session?.user?.id),
+      userId: Number(session.user?.id),
     },
   });
   return txns.map((t) => ({
@@ -23,6 +25,8 @@ const getTransactions = async () => {
 
 async function getBalance() {
   const session = await getServerSession(authOptions);
+    if (!session) redirect("/api/auth/signin");
+
   const balance = await db.balance.findFirst({
     where: {
       userId: Number(session?.user?.id),

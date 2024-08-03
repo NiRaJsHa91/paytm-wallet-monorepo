@@ -4,9 +4,12 @@ import { SendCard } from "../../../components/SendCard";
 import db from "@repo/db/client";
 import { authOptions } from "../../lib/auth";
 import { BalanceCard } from "../../../components/BalanceCard";
+import { redirect } from "next/navigation";
 
 async function getp2pTransactions() {
   const session = await getServerSession(authOptions);
+    if (!session) redirect("/api/auth/signin");
+
   const txns = await db.p2pTransfer.findMany({
     where: {
       toUserId: Number(session?.user?.id),
@@ -20,6 +23,8 @@ async function getp2pTransactions() {
 
 async function getBalance() {
   const session = await getServerSession(authOptions);
+    if (!session) redirect("/api/auth/signin");
+
   const balance = await db.balance.findFirst({
     where: {
       userId: Number(session?.user?.id),
