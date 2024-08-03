@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "../auth"
 import db from "@repo/db/client";
 
-export async function createOnRampTransaction(provider: string, amount: number) {
+export async function createOnRampTransaction(provider: string, amount: number, token: string) {
   const session = await getServerSession(authOptions);
 
   if (!session.user || !session.user.id) {
@@ -14,7 +14,7 @@ export async function createOnRampTransaction(provider: string, amount: number) 
   }
   // Ideally the token should come from the banking provider (hdfc/axis)
 
-  const token = (Math.random() * 1000).toString()
+  
   await db.onRampTransaction.create({
     data: {
       token,
@@ -27,6 +27,7 @@ export async function createOnRampTransaction(provider: string, amount: number) 
   })
 
   return {
-    message: "Done"
+    message: "Done",
+    userId: Number(session.user.id),
   }
 }

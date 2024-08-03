@@ -35,7 +35,6 @@ export default async function () {
 
     const balance = await getBalance();
     const transactions = await getp2pTransactions();
-    console.log(transactions)
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 p-4">

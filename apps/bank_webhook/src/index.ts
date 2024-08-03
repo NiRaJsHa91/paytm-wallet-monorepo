@@ -1,19 +1,21 @@
 import express from "express"
 import db from "@repo/db/client"
 import bodyParser from "body-parser"
+import cors from "cors"
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
+app.use(cors(
+  {origin: "http://localhost:3000",}
+))
 app.use(bodyParser.json());
 
 app.post("/hdfcWebhook", async(req, res) => {
   // toadd: add zod validation
   // tocheck: if request actually came from HDFC bank, using webhook secret here
 
-  
-  
   const paymentInformation: {
     token: string;
     userId: string;
@@ -23,30 +25,42 @@ app.post("/hdfcWebhook", async(req, res) => {
     userId: req.body.user_identifier,
     amount: req.body.amount,
   };
-  const txn_to_update = await db.onRampTransaction.findFirst({
-    where: {
-      token: paymentInformation.token,
-    },
-    select: {
-      status: true,
-    },
-  });
+  console.log("before onramp")
+  try {
+     await db.onRampTransaction.findFirst({
+      where: {
+        token: paymentInformation.token,
+      },
+      select: {
+        status: true,
+      },
+    });
+  } catch (error) {
+    console.log(error)
+  }
+  console.log("after onramp")
+  
   // tocheck: if an onRamptxn is still processiong or not
-  if (!txn_to_update) return res.status(400).json({ message: "Invalid token" });
-  if (txn_to_update?.status === "Success")
-    return res.status(200).json({ message: "Txn already processed" });
+  // if (!txn_to_update) return res.status(400).json({ message: "Invalid token" });
+  // if (txn_to_update?.status === "Success")
+    // return res.status(200).json({ message: "Txn already processed" });
   try {
     await db.$transaction([
-      db.balance.update({
+      db.balance.upsert({
         where: {
           userId: Number(paymentInformation.userId),
         },
-        data: {
+        update: {
           amount: {
             // You can also get this from your DB
             increment: Number(paymentInformation.amount),
           },
         },
+        create: {
+          amount: Number(paymentInformation.amount),
+          userId: Number(paymentInformation.userId),
+          locked: 0,
+        }
       }),
 
       db.onRampTransaction.update({

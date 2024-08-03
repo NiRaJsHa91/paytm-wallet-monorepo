@@ -30,7 +30,6 @@ export async function createP2Ptransfer(to: string, amount: number) {
        if (!fromBalance || fromBalance.amount < amount) {
          throw new Error("Insufficient funds");
        }
-
         await tx.balance.update({
           where: { userId: Number(from) },
           data: { amount: { decrement: amount } },

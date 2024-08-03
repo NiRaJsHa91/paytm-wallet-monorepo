@@ -33,8 +33,20 @@ export function SendCard() {
             />
             <div className="pt-4 flex justify-center">
               <Button onClick={async() => {
-                await createP2Ptransfer(number, Number(amount)*100)
-                router.push("/dashboard")
+                try {
+                  const response = await createP2Ptransfer(
+                    number,
+                    Number(amount) * 100
+                  );
+                  if (response?.message === "User not found")
+                    return alert("User not found");
+
+                  alert("Money Sent");
+                  router.push("/dashboard");
+                } catch (error: any) {
+                  return alert(`${error.message}. Please add funds in transfer section.`);
+                }
+
               }}>Send</Button>
             </div>
           </div>

@@ -7,6 +7,7 @@ export const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
+       
         phone: {
           label: "Phone number",
           type: "text",

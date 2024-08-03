@@ -5,6 +5,9 @@ import { Select } from "@repo/ui/select";
 import { useState } from "react";
 import { TextInput } from "@repo/ui/textinput";
 import { createOnRampTransaction } from "../app/lib/actions/createOnRampTransaction";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const SUPPORTED_BANKS = [
   {
@@ -45,8 +48,20 @@ export const AddMoney = () => {
         <div className="flex justify-center pt-4">
           <Button
             onClick={async() => {
-              await createOnRampTransaction(addMoneyDeatils.provider || "", addMoneyDeatils.amount)
-              window.location.href = redirectUrl || "";
+              const token = (Math.random() * 1000).toString();
+              const userId = await createOnRampTransaction(addMoneyDeatils.provider || "", addMoneyDeatils.amount, token)
+              try {
+                await axios.post("http://localhost:3002/hdfcWebhook", {
+                  token,
+                  amount: addMoneyDeatils.amount * 100,
+                  user_identifier: userId.userId,
+                });
+                window.location.reload();
+                alert("Money added Sucessfully")
+
+              } catch (error) {
+                alert("Something went wrong");
+              }      
             }}
           >
             Add Money
