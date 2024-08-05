@@ -3,9 +3,11 @@
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth"
 import db from "@repo/db/client";
+import { redirect } from "next/navigation";
 
 export async function createP2Ptransfer(to: string, amount: number) {
     const session = await getServerSession(authOptions)
+    if (!session) redirect("/api/auth/signin");
     const from = session?.user?.id
     if(!from){
         return{
@@ -22,6 +24,8 @@ export async function createP2Ptransfer(to: string, amount: number) {
      await db.$transaction(async (tx) => {
       //locking row for update
       // in monodb a txn reverts back automatically if a change happened to rows in db while txn is running
+      
+
       await tx.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${Number(from)} FOR UPDATE`;
 
        const fromBalance = await tx.balance.findUnique({

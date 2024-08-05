@@ -40,26 +40,34 @@ export const authOptions = {
           return null;
         }
 
-        try {
-          const user = await db.user.create({
-            data: {
-              number: credentials.phone,
-              password: hashedPassword,
-            },
-          });
+        try {          
+         await db.$transaction(async (tx) => {
+            const user = await tx.user.create({
+              data: {
+                number: credentials.phone,
+                password: hashedPassword,
+              },
+            });
 
-          return {
-            id: user.id.toString(),
-            name: user.name,
-            email: user.number,
-          };
+            await tx.balance.create({
+              data: {
+                userId: user?.id,
+                amount: 0,
+                locked: 0,
+              },
+            });
+
+            return {
+              id: user.id.toString(),
+              name: user.name,
+              email: user.number,
+            };
+          });
         } catch (e) {
           console.error(e);
-        }
-
-        return null;
-      },
-    }),
+      }
+      return null;
+    }})
   ],
   secret: process.env.JWT_SECRET || "secret",
   callbacks: {

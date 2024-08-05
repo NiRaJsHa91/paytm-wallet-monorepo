@@ -44,7 +44,7 @@ export function SendCard() {
                   alert("Money Sent");
                   router.push("/dashboard");
                 } catch (error: any) {
-                  return alert(`${error.message}. Please add funds in transfer section.`);
+                  return alert(`Something went wrong. Please add funds in transfer section if you do not have sufficient funds.`);
                 }
 
               }}>Send</Button>
