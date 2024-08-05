@@ -39,4 +39,4 @@ jobs:
           sudo docker pull nira78/paytm_client_docker:latest
           sudo docker stop web-app || true
           sudo docker rm web-app || true
-          sudo docker run -e DATABASE_URL="${{ secrets.DB_URL }}" -e JWT_SECRET="${{ secrets.JWT_SECRET }}" -e NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" --restart always -d --name web-app -p 3005:3000 nira78/paytm_client_docker:latest
+          sudo docker run -e DATABASE_URL="${{ secrets.DB_URL }}" -e JWT_SECRET="${{ secrets.JWT_SECRET }}" -e NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" --restart always -d --name web-app -p 3002:3002 -p 3005:3000 nira78/paytm_client_docker:latest
