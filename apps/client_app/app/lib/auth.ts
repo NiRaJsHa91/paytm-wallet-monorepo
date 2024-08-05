@@ -41,7 +41,7 @@ export const authOptions = {
         }
 
         try {          
-         await db.$transaction(async (tx) => {
+         const user = await db.$transaction(async (tx) => {
             const user = await tx.user.create({
               data: {
                 number: credentials.phone,
@@ -57,12 +57,14 @@ export const authOptions = {
               },
             });
 
-            return {
-              id: user.id.toString(),
-              name: user.name,
-              email: user.number,
-            };
-          });
+           return user
+          })
+           return {
+             id: user.id.toString(),
+             name: user.name,
+             email: user.number,
+           };
+
         } catch (e) {
           console.error(e);
       }
