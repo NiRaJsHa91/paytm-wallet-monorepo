@@ -49,7 +49,7 @@ export const AddMoney = () => {
               const token = (Math.random() * 1000).toString();
               const userId = await createOnRampTransaction(addMoneyDeatils.provider || "", addMoneyDeatils.amount, token)
               try {
-                await axios.post("http://localhost:3002/hdfcWebhook", {
+                await axios.post("https://online-wallet.duckdns.org/hdfcWebhook", {
                   token,
                   amount: addMoneyDeatils.amount * 100,
                   user_identifier: userId.userId,
