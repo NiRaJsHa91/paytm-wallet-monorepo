@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "../Providers";
 import AppbarClient from "../components/AppbarClient";
+import Head from "next/head";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -13,6 +14,8 @@ const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
 });
+
+
 
 export const metadata: Metadata = {
   title: "Online-Wallet",
@@ -26,6 +29,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <meta
+          name="google-site-verification"
+          content="FDpBTtcuwuNLfFp-ynNcr4-eet22I_MfboG7K9F1FN8"
+        />
+      </Head>
       <Providers>
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
           <div className="min-w-screen min-h-screen bg-[#ebe6e6]">
